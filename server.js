@@ -83,8 +83,43 @@ app.post('/signin', async (req, res) => {
 
 // })
 
+// app.post('/register', async (req, res) => {
+//   try {
+//     const { firstName, lastName, email, password } = req.body
+
+//     const hashpw = bcrypt.hashSync(password, 10)
+
+//     const profile = await db.transaction(async (trx) => {
+
+//       await trx('login').insert({
+//         email,
+//         hash: hashpw
+//       })
+
+//       const [user] = await trx('users')
+//         .insert({
+//           firstname: firstName,
+//           lastname: lastName,
+//           email,
+//           joined: new Date()
+//         })
+//         .returning('*')
+
+//       return user
+//     })
+
+//     res.json(profile)
+
+//   } catch (error) {
+//     console.log("REGISTER ERROR:", error)
+//     res.status(400).json(error.message)
+//   }
+// })
+
 app.post('/register', async (req, res) => {
   try {
+    console.log('BODY:', req.body)
+
     const { firstName, lastName, email, password } = req.body
 
     const hashpw = bcrypt.hashSync(password, 10)
@@ -111,10 +146,11 @@ app.post('/register', async (req, res) => {
     res.json(profile)
 
   } catch (error) {
-    console.log(error)
-    res.status(400).json('Error: unable to register')
+    console.log('REGISTER ERROR:', error)
+    res.status(400).json(error.message)
   }
 })
+
 
 app.get('/profile/:id', async (req, res) => {
   const {id} = req.params
