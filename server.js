@@ -2,16 +2,16 @@ import express from 'express';
 import cors from 'cors';
 import bcrypt from "bcrypt";
 import knex from 'knex';
+import dotenv from 'dotenv'
+
+
+dotenv.config()
 
 // connect to our database using knex
 const db = knex({
   client: 'pg',
-  connection: {
-    host: '127.0.0.1',
-    user: 'postgres',
-    password: 'postgres2026',
-    database: 'smart-brain',
-  },
+  connection: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }
 })
 
 
@@ -104,6 +104,6 @@ app.put('/image', async (req, res) => {
 
 
 
-app.listen(3000, () => {
+app.listen(process.env.PORT || 3000, () => {
   console.log("App is running on port 3000...")
 })
