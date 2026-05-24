@@ -48,20 +48,20 @@ app.post('/register', async (req, res) => {
     const {firstName, lastName, email, password} = req.body
     const saltRounds = 10;
     const hashpw = bcrypt.hashSync(password, saltRounds)
-
+    
     await db.transaction(async (trx) => {
       
       const saveLoginInfo = await trx('login').insert({
         email: email,
         hash: hashpw
-      }).returning('*')
+      })
 
       const user = await trx('users').insert({
         firstname: firstName,
         lastname: lastName,
         email: email,
         joined: new Date()
-      }).returning('*')
+      })
 
       const profile = await trx('users').select('*').where('email', email)
 
@@ -69,6 +69,7 @@ app.post('/register', async (req, res) => {
     })
     
   } catch (error) {
+    console.log(error)
     res.status(400).json('Error: unable to register')
   }
 
