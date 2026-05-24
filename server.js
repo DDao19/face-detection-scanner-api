@@ -8,10 +8,20 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 // connect to our database using knex
+// const db = knex({
+//   client: 'pg',
+//   connection: process.env.DATABASE_URL,
+//   ssl: { rejectUnauthorized: false }
+// })
+
 const db = knex({
   client: 'pg',
-  connection: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }
+  connection: {
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+      rejectUnauthorized: false
+    }
+  }
 })
 
 
