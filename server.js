@@ -16,12 +16,10 @@ dotenv.config()
 
 const db = knex({
   client: 'pg',
-  connection: {
-    connectionString: process.env.DATABASE_URL,
-    ssl: {
-      rejectUnauthorized: false
-    }
-  }
+  connection: process.env.DATABASE_URL,
+  ssl: process.env.NODE_ENV === 'production'
+    ? { rejectUnauthorized: false }
+    : false
 })
 
 
@@ -113,6 +111,16 @@ app.post('/register', async (req, res) => {
   } catch (error) {
     console.log("REGISTER ERROR:", error)
     res.status(400).json(error.message)
+  }
+})
+
+app.get('/db-test', async (req, res) => {
+  try {
+    const result = await db.raw('SELECT 1 as test')
+    res.json(result.rows)
+  } catch (error) {
+    console.log('DB TEST ERROR:', error)
+    res.status(500).json(error.message)
   }
 })
 
