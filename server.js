@@ -111,18 +111,8 @@ app.post('/register', async (req, res) => {
     res.json(profile)
 
   } catch (error) {
-    console.log("REGISTER ERROR:", error)
-    res.status(400).json(error.message)
-  }
-})
-
-app.get('/db-test', async (req, res) => {
-  try {
-    const result = await db.raw('SELECT 1 as test')
-    res.json(result.rows)
-  } catch (error) {
-    console.log('DB TEST ERROR:', error)
-    res.status(500).json(error.message)
+    console.log(error)
+    res.status(400).json('Error: unable to register')
   }
 })
 
