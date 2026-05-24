@@ -43,12 +43,12 @@ app.post('/signin', async (req, res) => {
 })
 
 app.post('/register', async (req, res) => {
- 
+ console.log('REGISTER HIT')
   try {
     const {firstName, lastName, email, password} = req.body
     const saltRounds = 10;
     const hashpw = bcrypt.hashSync(password, saltRounds)
-    
+    console.log("DB:", process.env.DATABASE_URL)
     await db.transaction(async (trx) => {
       
       const saveLoginInfo = await trx('login').insert({
