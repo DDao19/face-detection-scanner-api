@@ -42,36 +42,68 @@ app.post('/signin', async (req, res) => {
   }
 })
 
+// app.post('/register', async (req, res) => {
+  
+//   try {
+//     const {firstName, lastName, email, password} = req.body
+//     const hashpw = bcrypt.hashSync(password, 10)
+    
+//     await db.transaction(async (trx) => {  
+//       const saveLoginInfo = await trx('login').insert({
+//         email: email,
+//         hash: hashpw
+//       })
+
+//       const user = await trx('users').insert({
+//         firstname: firstName,
+//         lastname: lastName,
+//         email: email,
+//         joined: new Date()
+//       })
+
+//       const profile = await trx('users').select('*').where('email', email)
+
+//       res.json(profile)
+//     })
+    
+//   } catch (error) {
+//     console.log(error)
+//     res.status(400).json('Error: unable to register')
+//   }
+
+// })
+
 app.post('/register', async (req, res) => {
-  res.json(req.body.email)
-  // try {
-  //   const {firstName, lastName, email, password} = req.body
-  //   const saltRounds = 10;
-  //   const hashpw = bcrypt.hashSync(password, saltRounds)
-    
-  //   await db.transaction(async (trx) => {  
-  //     const saveLoginInfo = await trx('login').insert({
-  //       email: email,
-  //       hash: hashpw
-  //     })
+  try {
+    const { firstName, lastName, email, password } = req.body
 
-  //     const user = await trx('users').insert({
-  //       firstname: firstName,
-  //       lastname: lastName,
-  //       email: email,
-  //       joined: new Date()
-  //     })
+    const hashpw = bcrypt.hashSync(password, 10)
 
-  //     const profile = await trx('users').select('*').where('email', email)
+    const profile = await db.transaction(async (trx) => {
 
-  //     res.json(profile)
-  //   })
-    
-  // } catch (error) {
-  //   console.log(error)
-  //   res.status(400).json('Error: unable to register')
-  // }
+      await trx('login').insert({
+        email,
+        hash: hashpw
+      })
 
+      const [user] = await trx('users')
+        .insert({
+          firstname: firstName,
+          lastname: lastName,
+          email,
+          joined: new Date()
+        })
+        .returning('*')
+
+      return user
+    })
+
+    res.json(profile)
+
+  } catch (error) {
+    console.log("REGISTER ERROR:", error)
+    res.status(400).json(error.message)
+  }
 })
 
 app.get('/profile/:id', async (req, res) => {
