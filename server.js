@@ -114,8 +114,8 @@ app.get('/profile/:id', async (req, res) => {
 app.put('/image', async (req, res) => {
   try {
     const {email} = req.body
-    const updateEntries = await db('users').where('email', '=', email).increment('entries', 1).returning('*')
-   
+    const [updateEntries] = await db('users').where('email', '=', email).increment('entries', 1).returning('*')
+    
     res.json(updateEntries)
   } catch (error) {
     res.status(400).json("unable to get entries")
