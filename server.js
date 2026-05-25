@@ -139,7 +139,7 @@ app.post('/register', async (req, res) => {
           joined: new Date()
         })
         .returning('*')
-
+      console.log("New User: ", user) 
       return user
     })
 
