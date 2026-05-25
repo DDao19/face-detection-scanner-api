@@ -146,8 +146,8 @@ app.post('/register', async (req, res) => {
     res.json(profile)
 
   } catch (error) {
-    console.log('REGISTER ERROR:', error)
-    res.status(400).json(error.message)
+    console.log(error)
+    res.status(400).json('Error: unable to register')
   }
 })
 
