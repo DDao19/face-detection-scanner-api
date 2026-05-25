@@ -8,27 +8,27 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 // connect to our database using knex
-// const db = knex({
-//   client: 'pg',
-//   connection: {
-//     host: '127.0.0.1',
-//     port: 5432,
-//     user: 'postgres',
-//     password: 'postgres2026',
-//     database: 'smart-brain'
-//   },
-// })
-
-// connect to our database using knex
 const db = knex({
   client: 'pg',
   connection: {
-    connectionString: process.env.DATABASE_URL,
-    ssl: {
-      rejectUnauthorized: false
-    }
-  }
+    host: '127.0.0.1',
+    port: 5432,
+    user: 'postgres',
+    password: 'postgres2026',
+    database: 'smart-brain'
+  },
 })
+
+// connect to our database using knex
+// const db = knex({
+//   client: 'pg',
+//   connection: {
+//     connectionString: process.env.DATABASE_URL,
+//     ssl: {
+//       rejectUnauthorized: false
+//     }
+//   }
+// })
 
 
 const app = express()
@@ -45,9 +45,9 @@ app.get("/", async (req, res) => {
 app.post('/signin', async (req, res) => {
   try {
     const {email, password} = req.body
-    const user = await db.from('users').innerJoin('login', 'users.email', 'login.email').where('login.email', email)
+    const [user] = await db.from('users').innerJoin('login', 'users.email', 'login.email').where('login.email', email)
     
-    if (user[0].email === email && bcrypt.compareSync(password, user[0].hash)) {
+    if (user.email === email && bcrypt.compareSync(password, user.hash)) {
       res.json(user)
     } else {
       res.status(404).json("email or password is incorrect")
