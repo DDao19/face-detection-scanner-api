@@ -8,18 +8,6 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 // connect to our database using knex
-// const db = knex({
-//   client: 'pg',
-//   connection: {
-//     host: '127.0.0.1',
-//     port: 5432,
-//     user: 'postgres',
-//     password: 'postgres2026',
-//     database: 'smart-brain'
-//   },
-// })
-
-// connect to our database using knex
 const db = knex({
   client: 'pg',
   connection: {
